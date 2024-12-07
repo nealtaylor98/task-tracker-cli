@@ -1,5 +1,5 @@
 mod task;
-use clap::{command, Args, Parser, Subcommand};
+use clap::{command, Parser, Subcommand};
 use task::Task;
 
 #[derive(Parser)]
@@ -42,8 +42,4 @@ fn main() {
         Commands::Delete { id } => Task::delete(id),
         Commands::List { status } => Task::list_tasks(status),
     }
-}
-
-fn set_something(key: u32, value: String) {
-    todo!()
 }
