@@ -21,24 +21,47 @@ pub struct Task {
 }
 
 impl Task {
-    pub fn mark_done(task_id: &str) {
-        todo!()
+    fn get_task_list() -> std::sync::MutexGuard<'static, Vec<Task>> {
+        TASK_LIST
+            .lock()
+            .map_err(|_| "Failed to acquire lock")
+            .unwrap()
     }
 
-    pub fn mark_in_progress(task_id: &str) {
-        todo!()
+    pub fn mark_done(task_id: u32) {
+        let current_time = Local::now();
+        let mut tasks = Self::get_task_list();
+
+        if let Some(task) = tasks.iter_mut().find(|x| x.id == task_id) {
+            task.updated_at = current_time;
+            task.status = TaskStatus::Done;
+        } else {
+            println!("task with Id {} could not be found", task_id);
+        }
+    }
+
+    pub fn mark_in_progress(task_id: u32) {
+        let current_time = Local::now();
+        let mut tasks = Self::get_task_list();
+
+        if let Some(task) = tasks.iter_mut().find(|x| x.id == task_id) {
+            task.updated_at = current_time;
+            task.status = TaskStatus::InProgress;
+        } else {
+            println!("task with Id {} could not be found", task_id);
+        }
     }
 
     pub fn delete(task_id: u32) {
-        todo!()
+        let mut tasks = Self::get_task_list();
+
+        tasks.retain(|x| x.id != task_id);
     }
 
     pub fn add(task_name: &str) {
-        let mut tasks = TASK_LIST
-            .lock()
-            .map_err(|_| "Failed to acquire lock")
-            .unwrap();
         let current_time = Local::now();
+        let mut tasks = Self::get_task_list();
+
         let new_task = Task {
             id: 1,
             status: TaskStatus::Todo,
@@ -50,10 +73,19 @@ impl Task {
     }
 
     pub fn update(task_id: u32, task_name: &str) {
-        todo!()
+        let current_time = Local::now();
+
+        let mut tasks = Self::get_task_list();
+
+        if let Some(task) = tasks.iter_mut().find(|x| x.id == task_id) {
+            task.description = task_name.to_string();
+            task.updated_at = current_time;
+        } else {
+            println!("task with Id {} could not be found", task_id);
+        }
     }
 
-    pub(crate) fn list_tasks(status: Option<String>) {
-        todo!()
+    pub fn list_tasks(status: Option<String>) {
+        // for task in Self::get_task_list().iter() {}
     }
 }
