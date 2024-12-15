@@ -4,7 +4,7 @@ a task tracking cli
 2. run cargo install --path .
 
    
-Usage: task_tracker <COMMAND>
+Usage: task-tracker <COMMAND>
 
 Commands:
   add               
