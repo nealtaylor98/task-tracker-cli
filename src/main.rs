@@ -28,6 +28,16 @@ enum Commands {
         id: u32,
     },
 
+    #[command(arg_required_else_help = true)]
+    MarkInProgress {
+        id: u32,
+    },
+
+    #[command(arg_required_else_help = true)]
+    MarkDone {
+        id: u32,
+    },
+
     List {
         status: Option<String>,
     },
@@ -41,5 +51,7 @@ fn main() {
         Commands::Update { id, name } => Task::update(id, &name),
         Commands::Delete { id } => Task::delete(id),
         Commands::List { status } => Task::list_tasks(status),
+        Commands::MarkInProgress { id } => Task::mark_in_progress(id),
+        Commands::MarkDone { id } => Task::mark_done(id),
     }
 }
